@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchPropertiesRequest;
-use App\Models\property;
+use App\Models\Property;
 use App\Http\Requests\PropertyContactRequest;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PropertyContactMail;
@@ -15,7 +15,7 @@ class AgenceController extends Controller
 {
     public function index (SearchPropertiesRequest $request)
     {
-        $query = property::query()->where('sold', false)->orderBy('created_at', 'desc');
+        $query = Property::query()->where('sold', false)->orderBy('created_at', 'desc');
         if($request->validated('price')){
             $query = $query->where('price', '<=', $request->validated('price'));  
         }
@@ -61,7 +61,7 @@ class AgenceController extends Controller
         ]);
     }
 
-    public function contact(property $property, PropertyContactRequest $request)
+    public function contact(Property $property, PropertyContactRequest $request)
     {
         // dd($request->validated());
         $recipients = collect();
