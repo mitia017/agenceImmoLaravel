@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Property;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class DashboardResource extends JsonResource
 {
@@ -14,9 +14,9 @@ class DashboardResource extends JsonResource
     {
         return match ($this->role) {
             'superadmin' => $this->superAdminStats(),
-            'owner'      => $this->ownerStats(),
-            'agent'      => $this->agentStats(),
-            default      => [],
+            'owner' => $this->ownerStats(),
+            'agent' => $this->agentStats(),
+            default => [],
         };
     }
 
@@ -33,7 +33,7 @@ class DashboardResource extends JsonResource
                 'total_users' => User::count(),
             ],
 
-            'recent_users' => User::latest()->take(4)->get(['name','email']),
+            'recent_users' => User::latest()->take(4)->get(['name', 'email']),
 
             'pie_properties' => [
                 'sold' => Property::where('sold', true)->count(),
@@ -102,7 +102,7 @@ class DashboardResource extends JsonResource
             ->where('sold', true)
             ->whereBetween('updated_at', [
                 Carbon::now()->subDays(6)->startOfDay(),
-                Carbon::now()->endOfDay()
+                Carbon::now()->endOfDay(),
             ])
             ->groupBy('day')
             ->orderBy('day')
@@ -116,7 +116,7 @@ class DashboardResource extends JsonResource
             ->where('user_id', $this->id)
             ->whereBetween('updated_at', [
                 Carbon::now()->subDays(6)->startOfDay(),
-                Carbon::now()->endOfDay()
+                Carbon::now()->endOfDay(),
             ])
             ->groupBy('day')
             ->orderBy('day')

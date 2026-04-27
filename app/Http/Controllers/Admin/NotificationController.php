@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Notifications\DatabaseNotification;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\ClientReplyMail;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationController extends Controller
 {
@@ -17,6 +14,7 @@ class NotificationController extends Controller
     {
         $notifications = auth()->user()
             ->notifications()->latest()->paginate(10);
+
         return view('admin.notifications.index', compact('notifications'));
     }
 
@@ -30,15 +28,16 @@ class NotificationController extends Controller
 
         return view('admin.notifications.show', [
             'notification' => $notification,
-            'property' => \App\Models\Property::find($notification->data['property_id'])
+            'property' => \App\Models\Property::find($notification->data['property_id']),
         ]);
     }
 
     public function destroy(DatabaseNotification $notification): RedirectResponse
     {
         $notification->delete();
-        return back()->with('success', 'Notification supprimé avec succès.');    
-        
+
+        return back()->with('success', 'Notification supprimé avec succès.');
+
     }
 
     public function sendMail(DatabaseNotification $notification)

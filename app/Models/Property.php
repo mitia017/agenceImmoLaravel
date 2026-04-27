@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Property extends Model
 {
@@ -23,8 +23,9 @@ class Property extends Model
         'address',
         'postal_code',
         'sold',
-        'user_id'
+        'user_id',
     ];
+
     public function options(): BelongsToMany
     {
         return $this->belongsToMany(Option::class);
@@ -39,9 +40,11 @@ class Property extends Model
     {
         return Str::slug($this->title);
     }
+
     public function getUser()
     {
         $user = User::find($this->user_id);
+
         return $user;
     }
 

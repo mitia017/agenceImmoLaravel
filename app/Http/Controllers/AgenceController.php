@@ -2,39 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchPropertiesRequest;
-use App\Models\Property;
 use App\Http\Requests\PropertyContactRequest;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\PropertyContactMail;
-use App\Models\User;
+use App\Http\Requests\SearchPropertiesRequest;
 use App\Models\Option;
+use App\Models\Property;
+use App\Models\User;
 use App\Notifications\NewPropertyRequest;
 
 class AgenceController extends Controller
 {
-    public function index (SearchPropertiesRequest $request)
+    public function index(SearchPropertiesRequest $request)
     {
         $query = Property::query()->where('sold', false)->orderBy('created_at', 'desc');
-        if($request->validated('price')){
-            $query = $query->where('price', '<=', $request->validated('price'));  
+        if ($request->validated('price')) {
+            $query = $query->where('price', '<=', $request->validated('price'));
         }
-        if($request->validated('surface')){
-            $query = $query->where('surface', '>=', $request->validated('surface'));    
+        if ($request->validated('surface')) {
+            $query = $query->where('surface', '>=', $request->validated('surface'));
         }
-        if($request->validated('rooms')){
-            $query = $query->where('rooms', '>=', $request->validated('rooms'));    
+        if ($request->validated('rooms')) {
+            $query = $query->where('rooms', '>=', $request->validated('rooms'));
         }
-        if($request->validated('title')){
-            $query = $query->where('title', 'like', "%{$request->validated('title')}%");    
+        if ($request->validated('title')) {
+            $query = $query->where('title', 'like', "%{$request->validated('title')}%");
         }
 
         return view('property.index', [
             'properties' => $query->paginate(12),
-            'input' => $request->validated()
+            'input' => $request->validated(),
         ]);
 
-        
     }
 
     public function show(string $slug, Property $property)
@@ -44,20 +41,19 @@ class AgenceController extends Controller
         if ($slug !== $expectedSlug) {
             return to_route('property.show', [
                 'slug' => $expectedSlug,
-                'property' => $property
+                'property' => $property,
             ]);
         }
 
         // 🔥 Charger les relations nécessaires
         $property->load('images');
         $images = $property->images
-                    ->map(fn($img) => asset('storage/'.$img->path));
-
+            ->map(fn ($img) => asset('storage/'.$img->path));
 
         return view('property.show', [
             'property' => $property,
             'options' => Option::pluck('name', 'id'),
-            'images' => $images
+            'images' => $images,
         ]);
     }
 
@@ -75,6 +71,7 @@ class AgenceController extends Controller
             $user->notify(new NewPropertyRequest($property, $request->all()));
         }
         $recipients = null;
+
         return back()->with('success', 'Votre demande de contact a bien été envoyé');
     }
 }

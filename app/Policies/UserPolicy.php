@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
@@ -34,8 +33,13 @@ class UserPolicy
 
     public function updateRole(User $user, User $target)
     {
-        if (!$user->isSuperAdmin()) return false;
-        if ($target->role === User::ROLE_SUPERADMIN) return false; // pas toucher au superadmin
+        if (! $user->isSuperAdmin()) {
+            return false;
+        }
+        if ($target->role === User::ROLE_SUPERADMIN) {
+            return false;
+        } // pas toucher au superadmin
+
         return in_array($target->role, [User::ROLE_OWNER, User::ROLE_AGENT]);
     }
 

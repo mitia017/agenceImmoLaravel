@@ -1,27 +1,29 @@
 <?php
+
 // app/Http/Controllers/UserController.php
 
 namespace App\Http\Controllers;
 
 // app/Http/Controllers/UserController.php
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
-
 
 class UserController extends Controller
 {
     public function index()
     {
         $users = User::paginate(10);
+
         return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
         $this->authorize('create', User::class);
+
         return view('admin.users.create');
     }
 
@@ -64,12 +66,12 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         $currentUser = Auth::user();
-        
-        if($currentUser->role === 'superadmin')
-        {
+
+        if ($currentUser->role === 'superadmin') {
             $user->delete();
+
             return Redirect::back()->with('success', 'Utilisateur supprimé avec succès.');
         }
-        
+
     }
 }

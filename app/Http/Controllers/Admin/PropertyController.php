@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PropertyRequest;
-use App\Models\Property;
 use App\Models\Option;
+use App\Models\Property;
 
 class PropertyController extends Controller
 {
@@ -20,8 +21,9 @@ class PropertyController extends Controller
         } else {
             $properties = Property::where('user_id', $user->id)->paginate(10);
         }
+
         return view('admin.properties.index', [
-            'properties' => $properties
+            'properties' => $properties,
         ]);
     }
 
@@ -30,7 +32,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        $property = new Property();
+        $property = new Property;
         $property->fill([
             'surface' => 40,
             'rooms' => 3,
@@ -40,6 +42,7 @@ class PropertyController extends Controller
             'postal_code' => 34000,
             'sold' => false,
         ]);
+
         return view('admin.properties.form', [
             'property' => $property,
             'options' => Option::pluck('name', 'id'),
@@ -56,7 +59,6 @@ class PropertyController extends Controller
             ['user_id' => auth()->id()] // assignation automatique à l'utilisateur courant
         ));
 
-        
         if ($request->hasFile('images')) {
 
             foreach ($request->file('images') as $image) {
@@ -64,16 +66,15 @@ class PropertyController extends Controller
                 $path = $image->store('properties', 'public');
 
                 $property->images()->create([
-                    'path' => $path
+                    'path' => $path,
                 ]);
             }
         }
-        
+
         $property->options()->sync($request->validated('options'));
+
         return to_route('admin.property.index')->with('success', 'Le bien a bien été créé');
     }
-    
-    
 
     public function edit(Property $property)
     {
@@ -90,6 +91,7 @@ class PropertyController extends Controller
     {
         $property->options()->sync($request->validated('options'));
         $property->update($request->validated());
+
         return to_route('admin.property.index')->with('success', 'Le bien a bien été modifié');
     }
 
@@ -99,6 +101,7 @@ class PropertyController extends Controller
     public function destroy(Property $property)
     {
         $property->delete();
+
         return to_route('admin.property.index')->with('success', 'Le bien a bien été supprimé');
     }
 }
