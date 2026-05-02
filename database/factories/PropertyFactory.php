@@ -14,13 +14,13 @@ class PropertyFactory extends Factory
 
     public function definition(): array
     {
-        $type = $this->faker->randomElement(['Appartement', 'Maison', 'Villa', 'Studio', 'Loft', 'Duplex', 'Penthouse', 'Chalet', 'Ferme', 'Manoir', 'Bungalow', 'Cottage', 'Résidence', 'Immeuble', 'Local commercial']);
-        $name = $this->faker->lastName();
-        $surface = $this->faker->numberBetween(30, 350);
-        $rooms = $this->faker->numberBetween(1, 18);
-        $bedrooms = $this->faker->numberBetween(0, min($rooms, 15));
-        $price = $this->faker->numberBetween(50000, 1500000);
-        $city = $this->faker->city();
+        $type = fake()->randomElement(['Appartement', 'Maison', 'Villa', 'Studio', 'Loft', 'Duplex', 'Penthouse', 'Chalet', 'Ferme', 'Manoir', 'Bungalow', 'Cottage', 'Résidence', 'Immeuble', 'Local commercial']);
+        $name = fake()->lastName();
+        $surface = fake()->numberBetween(30, 350);
+        $rooms = fake()->numberBetween(1, 18);
+        $bedrooms = fake()->numberBetween(0, min($rooms, 15));
+        $price = fake()->numberBetween(50000, 1500000);
+        $city = fake()->city();
 
         return [
             'title' => "{$type} {$name} à {$city}",
@@ -28,11 +28,11 @@ class PropertyFactory extends Factory
             'surface' => $surface,
             'rooms' => $rooms,
             'bedrooms' => $bedrooms,
-            'floor' => $this->faker->numberBetween(0, 10),
+            'floor' => fake()->numberBetween(0, 10),
             'price' => $price,
             'city' => $city,
-            'address' => $this->faker->streetAddress(),
-            'postal_code' => $this->faker->postcode(),
+            'address' => fake()->streetAddress(),
+            'postal_code' => fake()->postcode(),
             'sold' => false,
             'user_id' => 1,
         ];
