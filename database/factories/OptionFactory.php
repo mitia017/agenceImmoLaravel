@@ -15,7 +15,7 @@ class OptionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->randomElement([
+            'name' => $this->fake()->randomElement([
                 'Balcon',
                 'Terrasse',
                 'Parking',
